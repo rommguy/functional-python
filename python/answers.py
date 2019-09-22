@@ -30,3 +30,5 @@ def elem(e):
 
 
 # 5.
+def length(lst):
+    return 0 if nil(lst) else 1 + length(tail(lst))

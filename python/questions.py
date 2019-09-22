@@ -159,14 +159,17 @@ def main_program():
      Signature: init = lst => ...
     """
 
-    init = None
+    def init(lst):
+        return (lambda t: Nil if nil(t) else cons(head(lst))(init(t)))(tail(lst))
 
     def testing_init():
         expect(
             "2. The first element in the init of a list", head(init(Lst(1, 2, 3))), 1
         )
         expect(
-            "2. The second element in the init of a list", head(init(Lst(1, 2, 3))), 2
+            "2. The second element in the init of a list",
+            head(tail(init(Lst(1, 2, 3)))),
+            2,
         )
         expect("2. The init length should be 2", tail(tail(init(Lst(1, 2, 3)))), Nil)
 
@@ -181,7 +184,8 @@ def main_program():
      Signature: last = list => ...
     """
 
-    last = None
+    def last(lst):
+        return (lambda t: head(lst) if nil(t) else last(t))(tail(lst))
 
     def testing_last():
         expect("3. tail of a list", last(Lst(1, 2, 3)), 3)
@@ -198,7 +202,17 @@ def main_program():
      Type: elem :: a -> [a] -> boolean
      Signature: elem = e => list => ...
     """
-    elem = None
+
+    def elem(e):
+        def inner(lst):
+            if nil(lst):
+                return False
+            elif head(lst) == e:
+                return True
+            else:
+                return elem(e)(tail(lst))
+
+        return inner
 
     def testing_elem():
         expect(" 4. Element should not be found in an empty list", elem(1)(Nil), False)
@@ -207,7 +221,7 @@ def main_program():
         expect(" 4. Existing element in a singleton list", elem(1)(Lst(1)), True)
         expect(" 4. Non-existing element", elem(4)(Lst(1, 2, 3)), False)
 
-    test(elem, testing_init)
+    test(elem, testing_elem)
 
     """
     ////////////////////////////////////////////////////////////////////////////////
