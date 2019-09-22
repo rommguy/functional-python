@@ -402,6 +402,109 @@ def main_program():
 
     test(reverse, testing_reverse)
 
+    """
+    ////////////////////////////////////////////////////////////////////////////////
+    11.
+    Implement the 'func_filter' function which takes a predicate
+    (a unary function returning a boolean) and a list and returns the list of
+    those elements that satisfy the predicate
+    
+    Type: func_filter :: (a -> boolean) -> [a] -> [a]
+    Signature: func_filter = p => list => ...
+    """
+
+    def func_filter(p):
+        return (
+            lambda lst: Nil
+            if nil(lst)
+            else func_filter(p)(tail(lst))
+            if not p(head(lst))
+            else cons(head(lst))(func_filter(p)(tail(lst)))
+        )
+
+    def testing_filter():
+        expect("11. Filtering an empty list ", func_filter(constant(True))(Nil), Nil)
+        expect("11. Filtering an empty list", func_filter(constant(False))(Nil), Nil)
+
+        def odd(x):
+            return x % 2 != 0
+
+        expect(
+            "11. Filtering odd numbers", func_filter(odd)(Lst(1, 2, 3, 4)), Lst(1, 3)
+        )
+
+    test(func_filter, testing_filter)
+
+    """
+    ////////////////////////////////////////////////////////////////////////////////
+    12.
+    Implement the 'func_map' function which returns a list obtained by applying the
+    unary function f to each element in the list
+    
+    'f's signature: const f = e => ... where e is an element in the list
+    
+    Type: func_map :: (a -> b) -> [a] -> [b]
+    Signature: func_map = f => list => ...
+    """
+
+    def square(x):
+        return x ** 2
+
+    def func_map(f):
+        return (
+            lambda lst: Nil if nil(lst) else cons(f(head(lst)))(func_map(f)(tail(lst)))
+        )
+
+    def testing_map():
+        expect("12. Mapping over an empty list", func_map(square)(Nil), Nil)
+        expect(
+            "12. func_mapping with identity",
+            func_map(identity)(Lst(1, 2, 3)),
+            Lst(1, 2, 3),
+        )
+        expect("12. Mapping over a singleton list", func_map(square)(Lst(2)), Lst(4))
+        expect("12. Mapping over a list", func_map(square)(Lst(1, 2, 3)), Lst(1, 4, 9))
+
+    test(func_map, testing_map)
+
+    """
+    ////////////////////////////////////////////////////////////////////////////////
+    13.
+    Implement the 'foldl' function which takes a binary function f,
+    a starting value z and a list.
+    'foldl' reduces the list using the binary function from left to right.
+    
+    'f's signature: const f = z => e => ...
+    where z is the reduced value and e is the list element
+    
+    Type: foldl :: (b -> a -> b) -> b -> [a] -> b
+    Signature: const foldl = f => z => list => ...
+    """
+
+    def foldl(f):
+        return (
+            lambda accm: lambda lst: accm
+            if nil(lst)
+            else foldl(f)(f(accm)(head(lst)))(tail(lst))
+        )
+
+    def testing_foldl():
+        def plus(a):
+            return lambda b: a + b
+
+        def minus(a):
+            return lambda b: a - b
+
+        expect(
+            "13. Left folding an empty list to be the staring value",
+            foldl(plus)(0)(Nil),
+            0,
+        )
+        expect("13. Left folding a list with plus", foldl(plus)(0)(Lst(1, 2, 3)), 6)
+        expect("13. Left folding a list with minus", foldl(minus)(0)(Lst(1, 2, 3)), -6)
+
+    test(foldl, testing_foldl)
+
 
 if __name__ == "__main__":
     main_program()
