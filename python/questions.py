@@ -1,5 +1,5 @@
 from python.list import cons, head, tail, Nil, Lst
-from python.test import test, expect
+from python.test import TestApi
 from python.functions import flip, compose, identity, constant
 
 
@@ -130,15 +130,22 @@ def main_program():
 
   Good luck!
 
-  */
 
-  ////////////////////////////////////////////////////////////////////////////////
-  // 1.
-  // Implement the 'nil' function which returns true if the list is Nil and false otherwise
-  //
-  // Type: nil :: [a] -> boolean
-  // Signature: nil = list => ...
+  */
   """
+
+    test_api = TestApi()
+    expect = test_api.expect
+    test = test_api.test
+
+    """
+    ////////////////////////////////////////////////////////////////////////////////
+    // 1.
+    // Implement the 'nil' function which returns true if the list is Nil and false otherwise
+    //
+    // Type: nil :: [a] -> boolean
+    // Signature: nil = list => ...
+    """
 
     def nil(lst):
         return lst == Nil

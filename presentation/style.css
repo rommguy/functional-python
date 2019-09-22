@@ -1,0 +1,11 @@
+.results {
+    padding: 20px 30px;
+}
+
+.results title {
+    display: block;
+    font-size: 24px;
+    color: black;
+    margin-bottom: 10px;
+
+}
