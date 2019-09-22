@@ -229,7 +229,7 @@ def main_program():
     Implement the 'length' function which returns the number of elements in the list
     
     Type: length :: [a] -> number
-    Signature: const length = list => ...
+    Signature: length = list => ...
     """
 
     def length(lst):
@@ -245,6 +245,155 @@ def main_program():
         )
 
     test(length, testing_length)
+
+    """
+    ////////////////////////////////////////////////////////////////////////////////
+    6.
+    Implement the 'take' function which return the prefix of list of length n.
+    If n > length(list), return list
+    
+    Type: take :: number -> [a] -> [a]
+    Signature: take = n => list => ...
+    """
+
+    def take(n):
+        return (
+            lambda lst: Nil
+            if nil(lst) or n == 0
+            else cons(head(lst))(take(n - 1)(tail(lst)))
+        )
+
+    def testing_take():
+        expect(" 6. Taking 0 from Nil", take(0)(Nil), Nil)
+        expect(" 6. Taking 3 from Nil", take(3)(Nil), Nil)
+        expect(" 6. Taking 0 from a list of 3", take(0)(Lst(1, 2, 3)), Nil)
+        expect(" 6. Taking 1 from a list of 3", take(1)(Lst(1, 2, 3)), Lst(1))
+        expect(" 6. Taking 2 from a list of 3", take(2)(Lst(1, 2, 3)), Lst(1, 2))
+        expect(" 6. Taking 3 from a list of 3", take(3)(Lst(1, 2, 3)), Lst(1, 2, 3))
+        expect(" 6. Taking 4 from a list of 3", take(4)(Lst(1, 2, 3)), Lst(1, 2, 3))
+
+    test(take, testing_take)
+
+    """
+    ////////////////////////////////////////////////////////////////////////////////
+    7.
+    Implement the 'drop' function which returns the suffix of list after the first n elements.
+    If n > length(list), return Nil
+    
+    Type: drop :: number -> [a] -> [a]
+    Signature: drop = n => list => ...
+    """
+
+    def drop(n):
+        return lambda lst: lst if nil(lst) or n == 0 else drop(n - 1)(tail(lst))
+
+    def testing_drop():
+        expect(" 7. Dropping 0 from Nil", drop(0)(Nil), Nil)
+        expect(" 7. Dropping 3 from Nil", drop(3)(Nil), Nil)
+        expect(" 7. Dropping 0 from a list of 3", drop(0)(Lst(1, 2, 3)), Lst(1, 2, 3))
+        expect(" 7. Dropping 1 from a list of 3", drop(1)(Lst(1, 2, 3)), Lst(2, 3))
+        expect(" 7. Dropping 2 from a list of 3", drop(2)(Lst(1, 2, 3)), Lst(3))
+        expect(" 7. Dropping 3 from a list of 3", drop(3)(Lst(1, 2, 3)), Nil)
+        expect(" 7. Dropping 4 from a list of 3", drop(4)(Lst(1, 2, 3)), Nil)
+
+    test(drop, testing_drop)
+
+    """
+    // 8.
+    Implement the 'eq' function which returns 'true' if the lists are equal
+    and 'false' otherwise
+    
+    Type: eq :: [a] -> [a] -> boolean
+    Signature: eq = as => bs => ...
+    """
+
+    def eq(lst1):
+        return (
+            lambda lst2: True
+            if nil(lst1)
+            and nil(lst2)
+            or not nil(lst1)
+            and not nil(lst2)
+            and head(lst1) == head(lst2)
+            and eq(tail(lst1))(tail(lst2))
+            else False
+        )
+
+    def testing_eq():
+        expect(" 8. Empty list equality", eq(Nil)(Nil), True)
+        expect(" 8. Non-empty list equality", eq(Lst(1, 2, 3))(Lst(1, 2, 3)), True)
+        expect(" 8. Long and short lists", eq(Lst(1, 2, 3))(Lst(2, 3)), False)
+        expect(" 8. Short and long lists", eq(Lst(1, 2))(Lst(1, 2, 3)), False)
+        expect(
+            " 8. Same length lists with non-equal element",
+            eq(Lst(1, 2, 3))(Lst(1, 2, 4)),
+            False,
+        )
+        expect(" 8. Empty and non-empty lists", eq(Nil)(Lst(1, 2, 4)), False)
+        expect(" 8. Non-empty and empty lists", eq(Lst(1, 2, 3))(Nil), False)
+
+    test(eq, testing_eq)
+
+    """
+    ////////////////////////////////////////////////////////////////////////////////
+    9.
+    Implement the 'concat' function which concatenates two lists
+    
+    Type: concat :: [a] -> [a] -> [a]
+    Signature: concat = as => bs => ...
+    """
+
+    def concat(lst1):
+        return (
+            lambda lst2: lst2
+            if nil(lst1)
+            else cons(head(lst1))(concat(tail(lst1))(lst2))
+        )
+
+    def testing_concat():
+        expect(
+            " 9. Concating two empty lists should be an empty list",
+            concat(Nil)(Nil),
+            Nil,
+        )
+        expect(
+            " 9. Concating an empty list and a non-empty list should be the non-empty list",
+            concat(Nil)(Lst(1, 2, 3)),
+            Lst(1, 2, 3),
+        )
+        expect(
+            " 9. Concating a non-empty list and an empty list should be the non-empty list",
+            concat(Lst(1, 2, 3))(Nil),
+            Lst(1, 2, 3),
+        )
+        expect(
+            " 9. Concating two non-empty lists should be the second list appended to the first",
+            concat(Lst(1, 2))(Lst(3, 4)),
+            Lst(1, 2, 3, 4),
+        )
+
+    test(concat, testing_concat)
+
+    """
+    ////////////////////////////////////////////////////////////////////////////////
+    10.
+    Implement the 'reverse' function which reverses the list
+    
+    Type: reverse :: [a] -> [a]
+    Signature: reverse = list => ...
+    """
+
+    def reverse(lst):
+        return Nil if nil(lst) else cons(last(lst))(reverse(init(lst)))
+
+    def testing_reverse():
+        expect("10. Reversing an empty list is the empty list", reverse(Nil), Nil)
+        expect(
+            "10. Reversing a singleton list is the same list", reverse(Lst(1)), Lst(1)
+        )
+        expect("10. Reversing a list", reverse(Lst(1, 2, 3)), Lst(3, 2, 1))
+
+    test(reverse, testing_reverse)
 
 
 if __name__ == "__main__":

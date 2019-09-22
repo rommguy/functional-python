@@ -6,8 +6,8 @@ def test(implemented, code):
     if callable(implemented):
         try:
             code()
-        except Exception:
-            print("Failed")
+        except Exception as inst:
+            print("Error ... Exception thrown: {error}".format(error=inst))
 
 
 def expect(message: str, actual, expected):
