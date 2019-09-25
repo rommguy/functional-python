@@ -148,8 +148,7 @@ def main_program():
     // Signature: nil = list_f => ...
     """
 
-    def nil(list_f):
-        return list_f == Nil
+    nil = None
 
     def testing_nil():
         expect("1. nil on empty list_f", nil(Nil), True)
@@ -167,8 +166,7 @@ def main_program():
      Signature: init = list_f => ...
     """
 
-    def init(list_f):
-        return (lambda t: Nil if nil(t) else cons(head(list_f))(init(t)))(tail(list_f))
+    init = None
 
     def testing_init():
         expect("2. The first element in the init of a list_f", head(init(ListF(1, 2, 3))), 1)
@@ -186,8 +184,7 @@ def main_program():
      Signature: last = list_f => ...
     """
 
-    def last(list_f):
-        return (lambda t: head(list_f) if nil(t) else last(t))(tail(list_f))
+    last = None
 
     def testing_last():
         expect("3. tail of a list_f", last(ListF(1, 2, 3)), 3)
@@ -205,16 +202,7 @@ def main_program():
      Signature: elem = e => list_f => ...
     """
 
-    def elem(e):
-        def inner(list_f):
-            if nil(list_f):
-                return False
-            elif head(list_f) == e:
-                return True
-            else:
-                return elem(e)(tail(list_f))
-
-        return inner
+    elem = None
 
     def testing_elem():
         expect(" 4. Element should not be found in an empty list_f", elem(1)(Nil), False)
@@ -234,8 +222,7 @@ def main_program():
     Signature: length = list_f => ...
     """
 
-    def length(list_f):
-        return 0 if nil(list_f) else 1 + length(tail(list_f))
+    length = None
 
     def testing_length():
         expect(" 5. The length of an empty list_f should be 0", length(Nil), 0)
@@ -254,12 +241,7 @@ def main_program():
     Signature: take = n => list_f => ...
     """
 
-    def take(n):
-        return (
-            lambda list_f: Nil
-            if nil(list_f) or n == 0
-            else cons(head(list_f))(take(n - 1)(tail(list_f)))
-        )
+    take = None
 
     def testing_take():
         expect(" 6. Taking 0 from Nil", take(0)(Nil), Nil)
@@ -282,8 +264,7 @@ def main_program():
     Signature: drop = n => list_f => ...
     """
 
-    def drop(n):
-        return lambda list_f: list_f if nil(list_f) or n == 0 else drop(n - 1)(tail(list_f))
+    drop = None
 
     def testing_drop():
         expect(" 7. Dropping 0 from Nil", drop(0)(Nil), Nil)
@@ -305,17 +286,7 @@ def main_program():
     Signature: eq = as => bs => ...
     """
 
-    def eq(func_list1):
-        return (
-            lambda func_list2: True
-            if nil(func_list1)
-            and nil(func_list2)
-            or not nil(func_list1)
-            and not nil(func_list2)
-            and head(func_list1) == head(func_list2)
-            and eq(tail(func_list1))(tail(func_list2))
-            else False
-        )
+    eq = None
 
     def testing_eq():
         expect(" 8. Empty list_f equality", eq(Nil)(Nil), True)
@@ -341,12 +312,7 @@ def main_program():
     Signature: concat = as => bs => ...
     """
 
-    def concat(func_list1):
-        return (
-            lambda func_list2: func_list2
-            if nil(func_list1)
-            else cons(head(func_list1))(concat(tail(func_list1))(func_list2))
-        )
+    concat = None
 
     def testing_concat():
         expect(" 9. Concatenating two empty lists should be an empty list_f", concat(Nil)(Nil), Nil)
@@ -377,8 +343,7 @@ def main_program():
     Signature: reverse = list_f => ...
     """
 
-    def reverse(list_f):
-        return Nil if nil(list_f) else cons(last(list_f))(reverse(init(list_f)))
+    reverse = None
 
     def testing_reverse():
         expect("10. Reversing an empty list_f is the empty list_f", reverse(Nil), Nil)
@@ -398,14 +363,7 @@ def main_program():
     Signature: filter_f = p => list_f => ...
     """
 
-    def filter_f(p):
-        return (
-            lambda list_f: Nil
-            if nil(list_f)
-            else filter_f(p)(tail(list_f))
-            if not p(head(list_f))
-            else cons(head(list_f))(filter_f(p)(tail(list_f)))
-        )
+    filter_f = None
 
     def testing_filter():
         expect("11. Filtering an empty list_f ", filter_f(constant(True))(Nil), Nil)
@@ -433,8 +391,7 @@ def main_program():
     def square(x):
         return x ** 2
 
-    def map_f(f):
-        return lambda list_f: Nil if nil(list_f) else cons(f(head(list_f)))(map_f(f)(tail(list_f)))
+    map_f = None
 
     def testing_map():
         expect("12. Mapping over an empty list_f", map_f(square)(Nil), Nil)
@@ -458,12 +415,7 @@ def main_program():
     Signature: foldl = f => z => list_f => ...
     """
 
-    def foldl(f):
-        return (
-            lambda accm: lambda list_f: accm
-            if nil(list_f)
-            else foldl(f)(f(accm)(head(list_f)))(tail(list_f))
-        )
+    foldl = None
 
     def testing_foldl():
         def plus(a):
@@ -492,12 +444,7 @@ def main_program():
     Signature: foldr = f => z => list_f => ...
     """
 
-    def foldr(f):
-        return (
-            lambda accm: lambda list_f: accm
-            if nil(list_f)
-            else f(head(list_f))(foldr(f)(accm)(tail(list_f)))
-        )
+    foldr = None
 
     def testing_foldr():
         def plus(a):
@@ -522,8 +469,7 @@ def main_program():
     Signature: copy = list_f => ...
     """
 
-    def copy(list_f):
-        return foldl(flip(cons))(Nil)(reverse(list_f))
+    copy = None
 
     def testing_copy():
         expect("15. Copy an empty list_f", copy(Nil), Nil)
@@ -542,7 +488,7 @@ def main_program():
     Signature: copy2 = list_f => ...
     """
 
-    copy2 = foldr(cons)(Nil)
+    copy2 = None
 
     def testing_copy2():
         expect("16. Copy an empty list_f", copy2(Nil), Nil)
@@ -561,8 +507,7 @@ def main_program():
     Signature: map2 = f => list_f => ...
     """
 
-    def func_map2(f):
-        return foldr(compose(cons)(f))(Nil)
+    func_map2 = None
 
     def testing_map2():
         expect("17. Mapping over an empty list_f", func_map2(square)(Nil), Nil)
@@ -581,7 +526,7 @@ def main_program():
     Signature: const reverse2 = list_f => ...
     """
 
-    reverse2 = foldl(flip(cons))(Nil)
+    reverse2 = None
 
     def testing_reverse2():
         expect("18. Reversing an empty list_f is the empty list_f", reverse2(Nil), Nil)
@@ -616,12 +561,7 @@ def main_program():
     Signature: zip_f = as => bs => ...
     """
 
-    def zip_f(a_lst_f):
-        return (
-            lambda b_lst_f: Nil
-            if nil(a_lst_f) or nil(b_lst_f)
-            else cons(pair(head(a_lst_f))(head(b_lst_f)))(zip_f(tail(a_lst_f))(tail(b_lst_f)))
-        )
+    zip_f = None
 
     def testing_zip():
         expect("19. Zipping empty lists", zip_f(Nil)(Nil), Nil)
@@ -654,15 +594,7 @@ def main_program():
     Signature: unzip = pairs => ...
     """
 
-    def unzip_func(list_pairs):
-        if nil(list_pairs):
-            return pair(Nil)(Nil)
-        else:
-            tail_unzipped = unzip_func(tail(list_pairs))
-            head_pair = head(list_pairs)
-            return pair(cons(fst(head_pair))(fst(tail_unzipped)))(
-                cons(snd(head_pair))(snd(tail_unzipped))
-            )
+    unzip_func = None
 
     def testing_unzip():
         expect("20. unzipping empty lists", unzip_func(Nil), pair(Nil)(Nil))
