@@ -1,6 +1,7 @@
 from python.list import cons, head, tail, Nil, Lst
 from python.test import TestApi
 from python.functions import flip, compose, identity, constant
+from python.pair import pair, fst, snd
 
 
 def main_program():
@@ -474,11 +475,11 @@ def main_program():
     a starting value z and a list.
     'foldl' reduces the list using the binary function from left to right.
     
-    'f's signature: const f = z => e => ...
+    'f's signature: f = z => e => ...
     where z is the reduced value and e is the list element
     
     Type: foldl :: (b -> a -> b) -> b -> [a] -> b
-    Signature: const foldl = f => z => list => ...
+    Signature: foldl = f => z => list => ...
     """
 
     def foldl(f):
@@ -504,6 +505,210 @@ def main_program():
         expect("13. Left folding a list with minus", foldl(minus)(0)(Lst(1, 2, 3)), -6)
 
     test(foldl, testing_foldl)
+
+    """
+    ////////////////////////////////////////////////////////////////////////////////
+    14.
+    Implement the 'foldr' function which takes a binary function f,
+    a starting value z and a list.
+    'foldr' reduces the list using the binary function from right to left.
+    
+    'f's signature: f = e => z => ...
+    where e is the list element and z is the reduced value
+    
+    Type: foldr :: (a -> b -> b) -> b -> [a] -> b
+    Signature: foldr = f => z => list => ...
+    """
+
+    def foldr(f):
+        return (
+            lambda accm: lambda lst: accm
+            if nil(lst)
+            else f(head(lst))(foldr(f)(accm)(tail(lst)))
+        )
+
+    def testing_foldr():
+        def plus(a):
+            return lambda b: a + b
+
+        def minus(a):
+            return lambda b: a - b
+
+        expect(
+            "14. Right folding an empty list to be the staring value",
+            foldr(plus)(0)(Nil),
+            0,
+        )
+        expect("14. Right folding a list with plus", foldr(plus)(0)(Lst(1, 2, 3)), 6)
+        expect("14. Right folding a list with minus", foldr(minus)(0)(Lst(1, 2, 3)), 2)
+
+    test(foldr, testing_foldr)
+
+    """
+    ////////////////////////////////////////////////////////////////////////////////
+    15.
+    Implement the 'copy' function which duplicates the list.
+    Use the 'foldl' function
+    
+    Type: copy :: [a] -> [a]
+    Signature: copy = list => ...
+    """
+
+    def copy(lst):
+        return foldl(flip(cons))(Nil)(reverse(lst))
+
+    def testing_copy():
+        expect("15. Copy an empty list", copy(Nil), Nil)
+        expect("15. Copy a singleton list", copy(Lst(1)), Lst(1))
+        expect("15. Copy a list", copy(Lst(1, 2, 3)), Lst(1, 2, 3))
+
+    test(copy, testing_copy)
+
+    """
+    ////////////////////////////////////////////////////////////////////////////////
+    16.
+    Implement the 'copy2' function which duplicates the list.
+    Use the 'foldr' function
+    
+    Type: copy2 :: [a] -> [a]
+    Signature: copy2 = list => ...
+    """
+
+    copy2 = foldr(cons)(Nil)
+
+    def testing_copy2():
+        expect("16. Copy an empty list", copy2(Nil), Nil)
+        expect("16. Copy a singleton list", copy2(Lst(1)), Lst(1))
+        expect("16. Copy a list", copy2(Lst(1, 2, 3)), Lst(1, 2, 3))
+
+    test(copy2, testing_copy2)
+
+    """
+    ////////////////////////////////////////////////////////////////////////////////
+    17.
+    Implement the 'map2' function. It should be similar to 'map'.
+    Use the 'foldr' function
+    
+    Type: map2 :: (a -> b) -> [a] -> [b]
+    Signature: map2 = f => list => ...
+    """
+
+    def func_map2(f):
+        return foldr(compose(cons)(f))(Nil)
+
+    def testing_map2():
+        expect("17. Mapping over an empty list", func_map2(square)(Nil), Nil)
+        expect("17. Mapping over a singleton list", func_map2(square)(Lst(2)), Lst(4))
+        expect("17. Mapping over a list", func_map2(square)(Lst(1, 2, 3)), Lst(1, 4, 9))
+
+    test(func_map2, testing_map2)
+
+    """
+    ////////////////////////////////////////////////////////////////////////////////
+    18.
+    Implement the 'reverse2' function. It should be similar to 'reverse'.
+    Use the 'foldl' function
+    
+    Type: reverse2 :: [a] -> [a]
+    Signature: const reverse2 = list => ...
+    """
+
+    reverse2 = foldl(flip(cons))(Nil)
+
+    def testing_reverse2():
+        expect("18. Reversing an empty list is the empty list", reverse2(Nil), Nil)
+        expect(
+            "18. Reversing a singleton list is the same list", reverse2(Lst(1)), Lst(1)
+        )
+        expect("18. Reversing a list", reverse2(Lst(1, 2, 3)), Lst(3, 2, 1))
+
+    test(reverse2, testing_reverse2)
+
+    """
+    For the following questions, we are introducing another data structure - pair
+
+    A pair has two elements, the first and the second. To create a pair:
+    
+    const myPair = pair (1) (2) // This is the pair (1, 2)
+    
+    To extract the first element from the pair:
+    
+    const first = fst (myPair) // This will result in 1
+    
+    To extract the second element from the pair:
+    
+    const second = snd (myPair) // This will result in 2
+    """
+
+    """
+    19.
+    Implement the 'zip' function which takes two lists and returns a list of
+    corresponding pairs. If one input list is short,
+    excess elements of the longer list are discarded.
+    
+    Type: zip :: [a] -> [b] -> [(a, b)]
+    Signature: zip = as => bs => ...
+    """
+
+    def zip_func(a_lst):
+        return (
+            lambda b_lst: Nil
+            if nil(a_lst) or nil(b_lst)
+            else cons(pair(head(a_lst))(head(b_lst)))(
+                zip_func(tail(a_lst))(tail(b_lst))
+            )
+        )
+
+    def testing_zip():
+        expect("19. Zipping empty lists", zip_func(Nil)(Nil), Nil)
+        expect("19. Zipping an empty list and a list", zip_func(Nil)(Lst(1, 2, 3)), Nil)
+        expect("19. Zipping a list and an empty list", zip_func(Lst(1, 2, 3))(Nil), Nil)
+        expect(
+            "19. Zipping two same-length lists",
+            zip_func(Lst(1, 2, 3))(Lst(10, 20, 30)),
+            Lst(pair(1)(10), pair(2)(20), pair(3)(30)),
+        )
+        expect(
+            "19. Zipping two lists, the first is shorter",
+            zip_func(Lst(1, 2, 3))(Lst(10, 20, 30, 40)),
+            Lst(pair(1)(10), pair(2)(20), pair(3)(30)),
+        )
+        expect(
+            "19. Zipping two lists, the second is shorter",
+            zip_func(Lst(1, 2, 3, 4))(Lst(10, 20, 30)),
+            Lst(pair(1)(10), pair(2)(20), pair(3)(30)),
+        )
+
+    test(zip_func, testing_zip)
+
+    """
+    20.
+    Implement the 'unzip' function which transforms a list of pairs into a
+    list of first components and a list of second components.
+    
+    Type: unzip :: [(a, b)] -> ([a], [b])
+    Signature: unzip = pairs => ...
+    """
+
+    def unzip_func(list_pairs):
+        if nil(list_pairs):
+            return pair(Nil)(Nil)
+        else:
+            tail_unzipped = unzip_func(tail(list_pairs))
+            head_pair = head(list_pairs)
+            return pair(cons(fst(head_pair))(fst(tail_unzipped)))(
+                cons(snd(head_pair))(snd(tail_unzipped))
+            )
+
+    def testing_unzip():
+        expect("20. unzipping empty lists", unzip_func(Nil), pair(Nil)(Nil))
+        expect(
+            "20. unzippint a list",
+            unzip_func(Lst(pair(1)(10), pair(2)(20), pair(3)(30))),
+            pair(Lst(1, 2, 3))(Lst(10, 20, 30)),
+        )
+
+    test(unzip_func, testing_unzip)
 
 
 if __name__ == "__main__":

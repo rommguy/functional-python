@@ -17,7 +17,7 @@ window.addEventListener('load', () => {
     }
 
     window.testStatus.reverse().forEach(entry => {
-        log(entry.message, entry.type === 'PASS' ? 'green' : 'red')
+        log(entry.message, entry.type === 'PASS' ? '#4aab4a' : 'red')
     })
 
 })
