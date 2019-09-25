@@ -1,4 +1,4 @@
-from python.list import cons, head, tail, Nil, Lst
+from python.list import cons, head, tail, Nil, ListF
 from python.test import TestApi
 from python.functions import flip, compose, identity, constant
 from python.pair import pair, fst, snd
@@ -153,7 +153,7 @@ def main_program():
 
     def testing_nil():
         expect("1. nil on empty list_f", nil(Nil), True)
-        expect("1. nil on empty list_f", nil(Lst(1, 2, 3)), False)
+        expect("1. nil on empty list_f", nil(ListF(1, 2, 3)), False)
 
     test(nil, testing_nil)
 
@@ -171,9 +171,9 @@ def main_program():
         return (lambda t: Nil if nil(t) else cons(head(list_f))(init(t)))(tail(list_f))
 
     def testing_init():
-        expect("2. The first element in the init of a list_f", head(init(Lst(1, 2, 3))), 1)
-        expect("2. The second element in the init of a list_f", head(tail(init(Lst(1, 2, 3)))), 2)
-        expect("2. The init length should be 2", tail(tail(init(Lst(1, 2, 3)))), Nil)
+        expect("2. The first element in the init of a list_f", head(init(ListF(1, 2, 3))), 1)
+        expect("2. The second element in the init of a list_f", head(tail(init(ListF(1, 2, 3)))), 2)
+        expect("2. The init length should be 2", tail(tail(init(ListF(1, 2, 3)))), Nil)
 
     test(init, testing_init)
 
@@ -190,8 +190,8 @@ def main_program():
         return (lambda t: head(list_f) if nil(t) else last(t))(tail(list_f))
 
     def testing_last():
-        expect("3. tail of a list_f", last(Lst(1, 2, 3)), 3)
-        expect("3. tail of a singleton list_f", last(Lst(1)), 1)
+        expect("3. tail of a list_f", last(ListF(1, 2, 3)), 3)
+        expect("3. tail of a singleton list_f", last(ListF(1)), 1)
 
     test(last, testing_last)
 
@@ -218,10 +218,10 @@ def main_program():
 
     def testing_elem():
         expect(" 4. Element should not be found in an empty list_f", elem(1)(Nil), False)
-        expect(" 4. Existing element is first", elem(1)(Lst(1, 2, 3)), True)
-        expect(" 4. Existing element is last", elem(1)(Lst(3, 2, 1)), True)
-        expect(" 4. Existing element in a singleton list_f", elem(1)(Lst(1)), True)
-        expect(" 4. Non-existing element", elem(4)(Lst(1, 2, 3)), False)
+        expect(" 4. Existing element is first", elem(1)(ListF(1, 2, 3)), True)
+        expect(" 4. Existing element is last", elem(1)(ListF(3, 2, 1)), True)
+        expect(" 4. Existing element in a singleton list_f", elem(1)(ListF(1)), True)
+        expect(" 4. Non-existing element", elem(4)(ListF(1, 2, 3)), False)
 
     test(elem, testing_elem)
 
@@ -239,8 +239,8 @@ def main_program():
 
     def testing_length():
         expect(" 5. The length of an empty list_f should be 0", length(Nil), 0)
-        expect(" 5. The length of a singleton list_f should be 1", length(Lst(1)), 1)
-        expect(" 5. The length of a list_f with 3 elements should be 3", length(Lst(1, 2, 3)), 3)
+        expect(" 5. The length of a singleton list_f should be 1", length(ListF(1)), 1)
+        expect(" 5. The length of a list_f with 3 elements should be 3", length(ListF(1, 2, 3)), 3)
 
     test(length, testing_length)
 
@@ -264,11 +264,11 @@ def main_program():
     def testing_take():
         expect(" 6. Taking 0 from Nil", take(0)(Nil), Nil)
         expect(" 6. Taking 3 from Nil", take(3)(Nil), Nil)
-        expect(" 6. Taking 0 from a list_f of 3", take(0)(Lst(1, 2, 3)), Nil)
-        expect(" 6. Taking 1 from a list_f of 3", take(1)(Lst(1, 2, 3)), Lst(1))
-        expect(" 6. Taking 2 from a list_f of 3", take(2)(Lst(1, 2, 3)), Lst(1, 2))
-        expect(" 6. Taking 3 from a list_f of 3", take(3)(Lst(1, 2, 3)), Lst(1, 2, 3))
-        expect(" 6. Taking 4 from a list_f of 3", take(4)(Lst(1, 2, 3)), Lst(1, 2, 3))
+        expect(" 6. Taking 0 from a list_f of 3", take(0)(ListF(1, 2, 3)), Nil)
+        expect(" 6. Taking 1 from a list_f of 3", take(1)(ListF(1, 2, 3)), ListF(1))
+        expect(" 6. Taking 2 from a list_f of 3", take(2)(ListF(1, 2, 3)), ListF(1, 2))
+        expect(" 6. Taking 3 from a list_f of 3", take(3)(ListF(1, 2, 3)), ListF(1, 2, 3))
+        expect(" 6. Taking 4 from a list_f of 3", take(4)(ListF(1, 2, 3)), ListF(1, 2, 3))
 
     test(take, testing_take)
 
@@ -288,11 +288,11 @@ def main_program():
     def testing_drop():
         expect(" 7. Dropping 0 from Nil", drop(0)(Nil), Nil)
         expect(" 7. Dropping 3 from Nil", drop(3)(Nil), Nil)
-        expect(" 7. Dropping 0 from a list_f of 3", drop(0)(Lst(1, 2, 3)), Lst(1, 2, 3))
-        expect(" 7. Dropping 1 from a list_f of 3", drop(1)(Lst(1, 2, 3)), Lst(2, 3))
-        expect(" 7. Dropping 2 from a list_f of 3", drop(2)(Lst(1, 2, 3)), Lst(3))
-        expect(" 7. Dropping 3 from a list_f of 3", drop(3)(Lst(1, 2, 3)), Nil)
-        expect(" 7. Dropping 4 from a list_f of 3", drop(4)(Lst(1, 2, 3)), Nil)
+        expect(" 7. Dropping 0 from a list_f of 3", drop(0)(ListF(1, 2, 3)), ListF(1, 2, 3))
+        expect(" 7. Dropping 1 from a list_f of 3", drop(1)(ListF(1, 2, 3)), ListF(2, 3))
+        expect(" 7. Dropping 2 from a list_f of 3", drop(2)(ListF(1, 2, 3)), ListF(3))
+        expect(" 7. Dropping 3 from a list_f of 3", drop(3)(ListF(1, 2, 3)), Nil)
+        expect(" 7. Dropping 4 from a list_f of 3", drop(4)(ListF(1, 2, 3)), Nil)
 
     test(drop, testing_drop)
 
@@ -319,14 +319,16 @@ def main_program():
 
     def testing_eq():
         expect(" 8. Empty list_f equality", eq(Nil)(Nil), True)
-        expect(" 8. Non-empty list_f equality", eq(Lst(1, 2, 3))(Lst(1, 2, 3)), True)
-        expect(" 8. Long and short lists", eq(Lst(1, 2, 3))(Lst(2, 3)), False)
-        expect(" 8. Short and long lists", eq(Lst(1, 2))(Lst(1, 2, 3)), False)
+        expect(" 8. Non-empty list_f equality", eq(ListF(1, 2, 3))(ListF(1, 2, 3)), True)
+        expect(" 8. Long and short lists", eq(ListF(1, 2, 3))(ListF(2, 3)), False)
+        expect(" 8. Short and long lists", eq(ListF(1, 2))(ListF(1, 2, 3)), False)
         expect(
-            " 8. Same length lists with non-equal element", eq(Lst(1, 2, 3))(Lst(1, 2, 4)), False
+            " 8. Same length lists with non-equal element",
+            eq(ListF(1, 2, 3))(ListF(1, 2, 4)),
+            False,
         )
-        expect(" 8. Empty and non-empty lists", eq(Nil)(Lst(1, 2, 4)), False)
-        expect(" 8. Non-empty and empty lists", eq(Lst(1, 2, 3))(Nil), False)
+        expect(" 8. Empty and non-empty lists", eq(Nil)(ListF(1, 2, 4)), False)
+        expect(" 8. Non-empty and empty lists", eq(ListF(1, 2, 3))(Nil), False)
 
     test(eq, testing_eq)
 
@@ -350,18 +352,18 @@ def main_program():
         expect(" 9. Concatenating two empty lists should be an empty list_f", concat(Nil)(Nil), Nil)
         expect(
             " 9. Concatenating an empty list_f and a non-empty list_f should be the non-empty list_f",
-            concat(Nil)(Lst(1, 2, 3)),
-            Lst(1, 2, 3),
+            concat(Nil)(ListF(1, 2, 3)),
+            ListF(1, 2, 3),
         )
         expect(
             " 9. Concatenating a non-empty list_f and an empty list_f should be the non-empty list_f",
-            concat(Lst(1, 2, 3))(Nil),
-            Lst(1, 2, 3),
+            concat(ListF(1, 2, 3))(Nil),
+            ListF(1, 2, 3),
         )
         expect(
             " 9. Concatenating two non-empty lists should be the second list_f appended to the first",
-            concat(Lst(1, 2))(Lst(3, 4)),
-            Lst(1, 2, 3, 4),
+            concat(ListF(1, 2))(ListF(3, 4)),
+            ListF(1, 2, 3, 4),
         )
 
     test(concat, testing_concat)
@@ -380,8 +382,8 @@ def main_program():
 
     def testing_reverse():
         expect("10. Reversing an empty list_f is the empty list_f", reverse(Nil), Nil)
-        expect("10. Reversing a singleton list_f is the same list_f", reverse(Lst(1)), Lst(1))
-        expect("10. Reversing a list_f", reverse(Lst(1, 2, 3)), Lst(3, 2, 1))
+        expect("10. Reversing a singleton list_f is the same list_f", reverse(ListF(1)), ListF(1))
+        expect("10. Reversing a list_f", reverse(ListF(1, 2, 3)), ListF(3, 2, 1))
 
     test(reverse, testing_reverse)
 
@@ -412,7 +414,7 @@ def main_program():
         def odd(x):
             return x % 2 != 0
 
-        expect("11. Filtering odd numbers", filter_f(odd)(Lst(1, 2, 3, 4)), Lst(1, 3))
+        expect("11. Filtering odd numbers", filter_f(odd)(ListF(1, 2, 3, 4)), ListF(1, 3))
 
     test(filter_f, testing_filter)
 
@@ -436,9 +438,9 @@ def main_program():
 
     def testing_map():
         expect("12. Mapping over an empty list_f", map_f(square)(Nil), Nil)
-        expect("12. func_mapping with identity", map_f(identity)(Lst(1, 2, 3)), Lst(1, 2, 3))
-        expect("12. Mapping over a singleton list_f", map_f(square)(Lst(2)), Lst(4))
-        expect("12. Mapping over a list_f", map_f(square)(Lst(1, 2, 3)), Lst(1, 4, 9))
+        expect("12. func_mapping with identity", map_f(identity)(ListF(1, 2, 3)), ListF(1, 2, 3))
+        expect("12. Mapping over a singleton list_f", map_f(square)(ListF(2)), ListF(4))
+        expect("12. Mapping over a list_f", map_f(square)(ListF(1, 2, 3)), ListF(1, 4, 9))
 
     test(map_f, testing_map)
 
@@ -471,8 +473,8 @@ def main_program():
             return lambda b: a - b
 
         expect("13. Left folding an empty list_f to be the staring value", foldl(plus)(0)(Nil), 0)
-        expect("13. Left folding a list_f with plus", foldl(plus)(0)(Lst(1, 2, 3)), 6)
-        expect("13. Left folding a list_f with minus", foldl(minus)(0)(Lst(1, 2, 3)), -6)
+        expect("13. Left folding a list_f with plus", foldl(plus)(0)(ListF(1, 2, 3)), 6)
+        expect("13. Left folding a list_f with minus", foldl(minus)(0)(ListF(1, 2, 3)), -6)
 
     test(foldl, testing_foldl)
 
@@ -505,8 +507,8 @@ def main_program():
             return lambda b: a - b
 
         expect("14. Right folding an empty list_f to be the staring value", foldr(plus)(0)(Nil), 0)
-        expect("14. Right folding a list_f with plus", foldr(plus)(0)(Lst(1, 2, 3)), 6)
-        expect("14. Right folding a list_f with minus", foldr(minus)(0)(Lst(1, 2, 3)), 2)
+        expect("14. Right folding a list_f with plus", foldr(plus)(0)(ListF(1, 2, 3)), 6)
+        expect("14. Right folding a list_f with minus", foldr(minus)(0)(ListF(1, 2, 3)), 2)
 
     test(foldr, testing_foldr)
 
@@ -525,8 +527,8 @@ def main_program():
 
     def testing_copy():
         expect("15. Copy an empty list_f", copy(Nil), Nil)
-        expect("15. Copy a singleton list_f", copy(Lst(1)), Lst(1))
-        expect("15. Copy a list_f", copy(Lst(1, 2, 3)), Lst(1, 2, 3))
+        expect("15. Copy a singleton list_f", copy(ListF(1)), ListF(1))
+        expect("15. Copy a list_f", copy(ListF(1, 2, 3)), ListF(1, 2, 3))
 
     test(copy, testing_copy)
 
@@ -544,8 +546,8 @@ def main_program():
 
     def testing_copy2():
         expect("16. Copy an empty list_f", copy2(Nil), Nil)
-        expect("16. Copy a singleton list_f", copy2(Lst(1)), Lst(1))
-        expect("16. Copy a list_f", copy2(Lst(1, 2, 3)), Lst(1, 2, 3))
+        expect("16. Copy a singleton list_f", copy2(ListF(1)), ListF(1))
+        expect("16. Copy a list_f", copy2(ListF(1, 2, 3)), ListF(1, 2, 3))
 
     test(copy2, testing_copy2)
 
@@ -564,8 +566,8 @@ def main_program():
 
     def testing_map2():
         expect("17. Mapping over an empty list_f", func_map2(square)(Nil), Nil)
-        expect("17. Mapping over a singleton list_f", func_map2(square)(Lst(2)), Lst(4))
-        expect("17. Mapping over a list_f", func_map2(square)(Lst(1, 2, 3)), Lst(1, 4, 9))
+        expect("17. Mapping over a singleton list_f", func_map2(square)(ListF(2)), ListF(4))
+        expect("17. Mapping over a list_f", func_map2(square)(ListF(1, 2, 3)), ListF(1, 4, 9))
 
     test(func_map2, testing_map2)
 
@@ -583,8 +585,8 @@ def main_program():
 
     def testing_reverse2():
         expect("18. Reversing an empty list_f is the empty list_f", reverse2(Nil), Nil)
-        expect("18. Reversing a singleton list_f is the same list_f", reverse2(Lst(1)), Lst(1))
-        expect("18. Reversing a list_f", reverse2(Lst(1, 2, 3)), Lst(3, 2, 1))
+        expect("18. Reversing a singleton list_f is the same list_f", reverse2(ListF(1)), ListF(1))
+        expect("18. Reversing a list_f", reverse2(ListF(1, 2, 3)), ListF(3, 2, 1))
 
     test(reverse2, testing_reverse2)
 
@@ -623,22 +625,22 @@ def main_program():
 
     def testing_zip():
         expect("19. Zipping empty lists", zip_f(Nil)(Nil), Nil)
-        expect("19. Zipping an empty list_f and a list_f", zip_f(Nil)(Lst(1, 2, 3)), Nil)
-        expect("19. Zipping a list_f and an empty list_f", zip_f(Lst(1, 2, 3))(Nil), Nil)
+        expect("19. Zipping an empty list_f and a list_f", zip_f(Nil)(ListF(1, 2, 3)), Nil)
+        expect("19. Zipping a list_f and an empty list_f", zip_f(ListF(1, 2, 3))(Nil), Nil)
         expect(
             "19. Zipping two same-length lists",
-            zip_f(Lst(1, 2, 3))(Lst(10, 20, 30)),
-            Lst(pair(1)(10), pair(2)(20), pair(3)(30)),
+            zip_f(ListF(1, 2, 3))(ListF(10, 20, 30)),
+            ListF(pair(1)(10), pair(2)(20), pair(3)(30)),
         )
         expect(
             "19. Zipping two lists, the first is shorter",
-            zip_f(Lst(1, 2, 3))(Lst(10, 20, 30, 40)),
-            Lst(pair(1)(10), pair(2)(20), pair(3)(30)),
+            zip_f(ListF(1, 2, 3))(ListF(10, 20, 30, 40)),
+            ListF(pair(1)(10), pair(2)(20), pair(3)(30)),
         )
         expect(
             "19. Zipping two lists, the second is shorter",
-            zip_f(Lst(1, 2, 3, 4))(Lst(10, 20, 30)),
-            Lst(pair(1)(10), pair(2)(20), pair(3)(30)),
+            zip_f(ListF(1, 2, 3, 4))(ListF(10, 20, 30)),
+            ListF(pair(1)(10), pair(2)(20), pair(3)(30)),
         )
 
     test(zip_f, testing_zip)
@@ -666,8 +668,8 @@ def main_program():
         expect("20. unzipping empty lists", unzip_func(Nil), pair(Nil)(Nil))
         expect(
             "20. unzipping a list_f",
-            unzip_func(Lst(pair(1)(10), pair(2)(20), pair(3)(30))),
-            pair(Lst(1, 2, 3))(Lst(10, 20, 30)),
+            unzip_func(ListF(pair(1)(10), pair(2)(20), pair(3)(30))),
+            pair(ListF(1, 2, 3))(ListF(10, 20, 30)),
         )
 
     test(unzip_func, testing_unzip)
