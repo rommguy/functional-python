@@ -1,7 +1,7 @@
 # functional-python
 Implementing basic functional building blocks with python
 
-This repo is conversion to python of [functional-test](https://github.com/oren-hollander/functional-test) by [Oren Hollander](https://github.com/oren-hollander).
+This repo is a conversion to python of [functional-test](https://github.com/oren-hollander/functional-test) by [Oren Hollander](https://github.com/oren-hollander).
 
 It should help you experience functional-programming thinking and writing in python, as well as train you in recusive thinking. 
 
